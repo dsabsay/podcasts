@@ -87,7 +87,8 @@ const App = (props) => Extend(Elementary, {
                   onClick: this.handleClickGet,
                   color: theme.colors.accent,
                   style: {
-                    borderRadius: '.25rem'
+                    borderRadius: '.25rem',
+                    fontSize: breakWidth({ 0: '3rem', 700: '1rem' }),
                   }
                 }),
               ),

@@ -52,7 +52,11 @@ const App = (props) => Extend(Elementary, {
       div(
         { 
           theme: theme,
-          style: { width: '100%', fontFamily: 'sans-serif' },
+          style: {
+            width: '100%',
+            fontFamily: 'sans-serif',
+            fontSize: breakWidth({ 0: '3em', 700: '1em' }),
+          }
         },
         Navbar(),
         FlexContainer({ flexDirection: 'row', style: { justifyContent: 'center' } },
@@ -88,7 +92,6 @@ const App = (props) => Extend(Elementary, {
                   color: theme.colors.accent,
                   style: {
                     borderRadius: '.25rem',
-                    fontSize: breakWidth({ 0: '3rem', 700: '1rem' }),
                   }
                 }),
               ),

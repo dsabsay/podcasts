@@ -1,5 +1,5 @@
 import { ElementaryFunc, Extend, Elementary, div, p, a, input } from '../elementary/elementary.js';
-import { Heading, Button, FlexContainer, FlexItem } from '../elementary/cake.js';
+import { Heading, Button, FlexContainer, FlexItem, FlexContainerItem } from '../elementary/cake.js';
 
 import { API_BASE_URL } from './constants.js';
 
@@ -8,7 +8,7 @@ const theme = {
     primary: '#353535',
     secondary: '#c6c6c6',
     background: 'white',
-    accent: '#92cff3',
+    accent: '#2bc66e',
   },
   fontFamily: 'sans-serif',
   spacing: '1rem',
@@ -54,33 +54,132 @@ const App = (props) => Extend(Elementary, {
           theme: theme,
           style: { width: '100%', fontFamily: 'sans-serif' },
         },
-        FlexContainer({ flexDirection: 'column', style: { alignItems: 'center' } },
+        Navbar(),
+        FlexContainer({ flexDirection: 'row', style: { justifyContent: 'center' } },
           FlexItem(
-            Heading('Podcasts')
+            { flex: breakWidth({ 0: '0 0 0', 700: '1 0 0' }) }
+          ),
+          FlexContainerItem(
+            { flex: '3 0 0',
+              flexDirection: 'column',
+              alignItems: 'center',
+            },
+            FlexContainerItem({
+              justifyContent: 'center',
+              style: {
+                width: '100%',
+                padding: theme.spacing
+              }},
+              FlexItem(
+                { flex: '1 0 auto' },
+                input({
+                  id: 'feed-url-input',
+                  style: {
+                    width: '95%'
+                  }
+                })
+              ),
+              FlexItem(
+                { flex: '.35 0 0' },
+                Button({
+                  id: 'get',
+                  label: 'Get episodes',
+                  onClick: this.handleClickGet,
+                  color: theme.colors.accent,
+                  style: {
+                    borderRadius: '.25rem'
+                  }
+                }),
+              ),
+            ),
+            FlexItem(
+              { flex: '1 0 0' },
+              this.state.isError ? p(this.state.error) : EpisodeList({ episodes: this.state.episodes }),
+            )
           ),
           FlexItem(
-            input('test', { id: 'feed-url-input' }),
-            Button({
-              id: 'get',
-              label: 'Get episodes',
-              onClick: this.handleClickGet,
-            }),
+            { flex: breakWidth({ 0: '0 0 auto', 700: '1 0 auto' }) }
           ),
-          this.state.isError ? FlexItem(p(this.state.error)) : EpisodeList({ episodes: this.state.episodes }),
         ),
       )
     );
   }
 }, props);
 
+function breakWidth(breakpoints) {
+  let bps = Object.keys(breakpoints).sort().reverse();
+  
+  for (let bp of bps) {
+    if (window.matchMedia(`(min-width: ${bp}px`).matches) {
+      return breakpoints[bp];
+    }
+  }
+
+  console.warn('breakWidth: no breakpoint matched.');
+  return null;
+}
+
+const Navbar = ElementaryFunc((props) => (
+  FlexContainer(
+    { flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'stretch',
+      style: { width: '100%', backgroundColor: props.theme.colors.primary }
+    },
+    FlexItem(
+      { flex: '2 0 auto' }
+    ),
+    FlexItem(
+      { flex: '2 0 auto' },
+      Heading(
+        { size: 1,
+          style: {
+            color: props.theme.colors.background,
+            textAlign: 'center',
+          }
+        },
+        'Podcasts'
+      ),
+    ),
+    FlexItem({ flex: '1 0 auto' }),
+    FlexItem(
+      { flex: '1 0 auto' },
+      Button({
+        id: 'help-button',
+        label: '?',
+        color: props.theme.colors.primary,
+        style: {
+          height: '100%',
+          width: '100%',
+          color: props.theme.colors.background,
+          fontSize: '1rem'
+        }
+      })
+    )
+  )
+));
+
 const EpisodeList = ElementaryFunc((props) => (
   FlexContainer(
     { flexDirection: 'column',
-      style: { width: '50%' }
+      alignItems: 'stretch',
+      style: { width: '100%' }
     },
     props.episodes.map(ep => (
-      FlexItem(
-        Heading({ size: 4 }, ep.title),
+      FlexItem({
+        style: {
+          margin: props.theme.spacing,
+          padding: props.theme.spacing,
+          borderStyle: 'solid',
+          borderRadius: '.25rem',
+          borderColor: props.theme.colors.secondary,
+        }},
+        Heading({
+          size: 4,
+          style: {
+            margin: 0
+          }},
+          ep.title),
         p(ep.duration),
         a('Go to episode', { href: ep.link }),
       )

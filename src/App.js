@@ -55,7 +55,7 @@ const App = (props) => Extend(Elementary, {
           style: {
             width: '100%',
             fontFamily: 'sans-serif',
-            fontSize: breakWidth({ 0: '3em', 700: '1em' }),
+            fontSize: breakWidth({ 0: '3em', 800: '1em' }),
           }
         },
         Navbar(),

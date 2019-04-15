@@ -1,4 +1,4 @@
-import { ElementaryFunc, Extend, Elementary, div, p, a, input } from '../elementary/elementary.js';
+import { ElementaryFunc, Extend, Elementary, StyleSheet, div, p, a, input } from '../elementary/elementary.js';
 import { Heading, Button, FlexContainer, FlexItem, FlexContainerItem } from '../elementary/cake.js';
 
 import { API_BASE_URL } from './constants.js';
@@ -12,6 +12,22 @@ const theme = {
   },
   fontFamily: 'sans-serif',
   spacing: '1rem',
+};
+
+const styleSheet = {
+  /* NOTE: order of these @media rules is important:
+   *       rules appearing later override earlier rules
+   */
+  '@media (min-width: 700px)': {
+    '.bufferColumn': {
+      flex: '1 0 0'
+    }
+  },
+  '@media (min-width: 0px)': {
+    '.bufferColumn': {
+      flex: '0 0 0'
+    }
+  },
 };
 
 const App = (props) => Extend(Elementary, {
@@ -49,19 +65,20 @@ const App = (props) => Extend(Elementary, {
 
   render: function() {
     return (
+      StyleSheet(this.props.id, styleSheet),
       div(
         { 
+          id: this.props.id,
           theme: theme,
           style: {
             width: '100%',
             fontFamily: 'sans-serif',
-            fontSize: breakWidth({ 0: '3em', 800: '1em' }),
           }
         },
         Navbar(),
         FlexContainer({ flexDirection: 'row', style: { justifyContent: 'center' } },
           FlexItem(
-            { flex: breakWidth({ 0: '0 0 0', 700: '1 0 0' }) }
+            { noInline: true, class: 'bufferColumn' }
           ),
           FlexContainerItem(
             { flex: '3 0 0',
@@ -70,21 +87,23 @@ const App = (props) => Extend(Elementary, {
             },
             FlexContainerItem({
               justifyContent: 'center',
+              alignItems: 'center',
               style: {
                 width: '100%',
                 padding: theme.spacing
               }},
               FlexItem(
-                { flex: '1 0 auto' },
+                { flex: '1 0 0' },
                 input({
                   id: 'feed-url-input',
                   style: {
-                    width: '95%'
+                    width: '95%',
+                    height: '1rem',
                   }
                 })
               ),
               FlexItem(
-                { flex: '.35 0 0' },
+                { flex: '.5 0 0' },
                 Button({
                   id: 'get',
                   label: 'Get episodes',
@@ -92,6 +111,9 @@ const App = (props) => Extend(Elementary, {
                   color: theme.colors.accent,
                   style: {
                     borderRadius: '.25rem',
+                    fontSize: '1rem',
+                    width: '100%',
+                    height: '100%',
                   }
                 }),
               ),
@@ -102,7 +124,7 @@ const App = (props) => Extend(Elementary, {
             )
           ),
           FlexItem(
-            { flex: breakWidth({ 0: '0 0 auto', 700: '1 0 auto' }) }
+            { noInline: true, class: 'bufferColumn' }
           ),
         ),
       )
